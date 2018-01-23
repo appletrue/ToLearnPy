@@ -54,7 +54,8 @@ yticks(np.linspace(-1,1,5,endpoint=True))   # 设置纵轴记号
 
 show()    # 在屏幕上显示
 ```
-设置图片边界:修改为:
+### 设置图片边界:修改为:
+
 ```python
 xlim(X.min()*1.1, X.max()*1.1)
 ylim(C.min()*1.1, C.max()*1.1)
@@ -84,7 +85,7 @@ xticks([-np.pi, -np.pi/2, 0, np.pi/2, np.pi],
 yticks([-1, 0, +1],
        [r'$-1$', r'$0$', r'$+1$'])
 ```
-移动脊柱Spines
+### 移动脊柱Spines
 
 坐标轴线和上面的记号连在一起就形成了脊柱（Spines，一条线段上有一系列的凸起，是不是很像脊柱骨啊~），它记录了数据区域的范围。它们可以放在任意位置，不过至今为止，我们都把它放在图的四边
 
@@ -98,7 +99,7 @@ ax.spines['bottom'].set_position(('data',0))
 ax.yaxis.set_ticks_position('left')
 ax.spines['left'].set_position(('data',0))
 ```
-添加图例Legend
+### 添加图例Legend
 
 我们在图的左上角添加一个图例。为此，我们只需要在 plot 函数里以「键 - 值」的形式增加一个参数。
 
@@ -108,7 +109,7 @@ plot(X, S, color="red",  linewidth=2.5, linestyle="-", label="sine")
 
 legend(loc='upper left')
 ```
-特殊点做注释
+### 特殊点做注释
 
 希望在 2π/3 的位置给两条函数曲线加上一个注释。首先，我们在对应的函数图像位置上画一个点；然后，向横轴引一条垂线，以虚线标记；最后，写上标签。
 
@@ -140,26 +141,45 @@ for label in ax.get_xticklabels() + ax.get_yticklabels():
     label.set_bbox(dict(facecolor='white', edgecolor='None', alpha=0.65 ))
 ```
 
-图像、子图、坐标轴和记号
+到目前为止，我们都用隐式的方法来绘制图像和坐标轴。快速绘图中，这是很方便的。我们也可以显式地控制图像、子图、坐标轴。
 
-到目前为止，我们都用隐式的方法来绘制图像和坐标轴。快速绘图中，这是很方便的。我们也可以显式地控制图像、子图、坐标轴。Matplotlib 中的「图像」指的是用户界面看到的整个窗口内容。在图像里面有所谓「子图」。子图的位置是由坐标网格确定的，而「坐标轴」却不受此限制，可以放在图像的任意位置。我们已经隐式地使用过图像和子图：当我们调用 plot 函数的时候，matplotlib 调用 gca() 函数以及 gcf() 函数来获取当前的坐标轴和图像；如果无法获取图像，则会调用 figure() 函数来创建一个——严格地说，是用 subplot(1,1,1) 创建一个只有一个子图的图像。
+### 图像
 
-图形界面中可以按下右上角的 X 来关闭窗口（OS X 系统是左上角）。Matplotlib 也提供了名为 close 的函数来关闭这个窗口。close 函数的具体行为取决于你提供的参数：
+Matplotlib 中的「图像」指的是用户界面看到的整个窗口内容。图形界面中可以按下右上角的 X 来关闭窗口（OS X 系统是左上角）。Matplotlib 也提供了名为 close 的函数来关闭这个窗口。close 函数的具体行为取决于你提供的参数：
 
 不传递参数：关闭当前窗口；
 传递窗口编号或窗口实例（instance）作为参数：关闭指定的窗口；
 all：关闭所有窗口。
 和其他对象一样，你可以使用 setp 或者是 set_something 这样的方法来设置图像的属性。
 
-子图
+### 子图
 
+在图像里面有所谓「子图」。子图的位置是由坐标网格确定的.我们已经隐式地使用过图像和子图：当我们调用 plot 函数的时候，matplotlib 调用 gca() 函数以及 gcf() 函数来获取当前的坐标轴和图像；如果无法获取图像，则会调用 figure() 函数来创建一个——严格地说，是用 subplot(1,1,1) 创建一个只有一个子图的图像。
 用 subplot 函数的时候，你需要指明网格的行列数量，以及你希望将图样放在哪一个网格区域中。此外，gridspec 的功能更强大，你也可以选择它来实现这个功能
 
-坐标轴
+使用子图只需要一个额外的步骤，就可以像前面的例子一样绘制数据集。即在调用 plot() 函数之前需要先调用 subplot() 函数。该函数的第一个参数代表子图的总行数，第二个参数代表子图的总列数，第三个参数代表活跃区域。
 
-坐标轴和子图功能类似，不过它可以放在图像的任意位置。因此，如果你希望在一副图中绘制一个小图，就可以用这个功能。
+```python
+x = np.linspace(0, 2 * np.pi, 50)
+plt.subplot(2, 1, 1) # （行，列，活跃区）
+plt.plot(x, np.sin(x), 'r')
+plt.subplot(2, 1, 2)
+plt.plot(x, np.cos(x), 'g')
+plt.show()
+```
+区别以下代码:
+```python
+x = np.linspace(0, 2 * np.pi, 50)
+plt.plot(x, np.sin(x), 'r-o',
+        x, np.cos(x), 'g--')
+plt.show()
+```
 
-记号
+### 坐标轴
+
+坐标轴和子图功能类似，但「坐标轴」不受坐标网格限制，可以放在图像的任意位置。因此，如果你希望在一副图中绘制一个小图，就可以用这个功能。
+
+### 记号
 
 良好的记号是图像的重要组成部分。Matplotlib 里的记号系统里的各个细节都是可以由用户个性化配置的。你可以用 Tick Locators 来指定在那些位置放置记号，用 Tick Formatters 来调整记号的样式。主要和次要的记号可以以不同的方式呈现。默认情况下，每一个次要的记号都是隐藏的，也就是说，默认情况下的次要记号列表是空的——NullLocator
 
@@ -168,6 +188,8 @@ Tick Locators
 (NullLocator/IndexLocator/FixedLocator/LinearLocator/MultipleLocator/AutoLocator/LogLocator )都是 matplotlib.ticker.Locator 的子类，你可以据此定义自己的 Locator。
 
 以日期为 ticks 特别复杂，因此 Matplotlib 提供了 matplotlib.dates 来实现这一功能
+
+
 
 
 ---------------------   
