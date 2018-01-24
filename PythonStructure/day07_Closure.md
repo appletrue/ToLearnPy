@@ -116,7 +116,7 @@ print(f1(),f2(),f3())
 **3**
 9  9  9
 ```
-上一例子中,i并没有在函数中定义，所以f 和外部i 构成闭包，i在range最后取值为3，因此在return fs 这一行的时候，这个闭包里i 的值确定了，每一次调用的结果都是9.
+上一例子中,i并没有在函数中定义，所以f 和外部i 构成闭包，i在range最后取值为3，因此在return fs 这一行的时候，这个闭包里i 的值确定了，每一次调用的结果都是9. **迭代没有作用域的概念，需要手动把它放进闭包里**
 对比以下代码中形式，i每个阶段的值，通过默认参数传入j，这时候相当于j拿下了这个接力棒，把中间值都保存下来了，这时候每一个f的构成，没有任何闭包，return之后i就销毁了.
 ```python
 def count():
@@ -193,6 +193,7 @@ print(f1.__closure__)
 8,闭包仅仅是一个为了保存上下文信息以便在函数调用时正确寻址和取值的存在。
 
 ----------
-[参考来源网址:](https://foofish.net/python-closure.html)
-[深入理解闭包的解答:](https://stackoverflow.com/questions/36636/what-is-a-closure)
-[知乎关于闭包的解答](https://www.zhihu.com/question/31792789/answer/54189871)
+[参考来源网址:](https://foofish.net/python-closure.html)    
+[深入理解闭包的解答:](https://stackoverflow.com/questions/36636/what-is-a-closure)    
+[知乎关于闭包的解答](https://www.zhihu.com/question/31792789/answer/54189871)    
+[深入浅出python闭包](https://zhuanlan.zhihu.com/p/22229197)
